@@ -16,7 +16,7 @@ export const obtenerTodosLosAlumnos = async () => {
 export const crearAlumnoConApoderado = async (nuevoEstudiante) => {
    try {
       const respuesta = await api.post("/registro/alumno", nuevoEstudiante);
-    return respuesta.data;
+      return respuesta.data;
    } catch (error) {
       console.error("Error al crear estudiante");
       throw error;
@@ -24,6 +24,21 @@ export const crearAlumnoConApoderado = async (nuevoEstudiante) => {
 };
 
 export const actualizarAlumno = async (id, estudianteActualizado) => {
-    const respuesta = await api.put(`/registro/alumno/${id}`, estudianteActualizado);
-    return respuesta.data;
+   try {
+      const respuesta = await api.put(`/registro/alumno/${id}`, estudianteActualizado);
+      return respuesta.data;
+   }
+   catch (error) {
+      console.error("Error al actualizar el alumno");
+   }
+
+}
+
+export const eliminarAlumno = async (id) => {
+  try {
+    await api.delete(`/registro/alumno/${id}`);
+  } catch (error) {
+    console.error("Error al eliminar alumno");
+    throw error;
+  }
 };
