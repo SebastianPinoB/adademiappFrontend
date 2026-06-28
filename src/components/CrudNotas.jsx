@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 
 const CrudNotas = () => {
   const [notas, setNotas] = useState([
     { id: 1, alumno: 'Juan Pérez', asignatura: 'Matemáticas', curso: '1° Medio A', valor: 6.5, descripcion: 'Prueba 1' },
     { id: 2, alumno: 'María López', asignatura: 'Matemáticas', curso: '1° Medio A', valor: 5.8, descripcion: 'Prueba 1' }
   ]);
+
+  
 
   const [alumno, setAlumno] = useState('');
   const [asignatura, setAsignatura] = useState('Matemáticas');

@@ -1,16 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUsuario } from '/src/services/usuarioConfig.js'
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
    const [view, setView] = useState('login'); // login o recovery
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+   const [rol, setRol] = useState('Alumno'); 
    const navigate = useNavigate();
 
-   const handleLoginSubmit = (e) => {
-      e.preventDefault();
-      // Aquí irá tu lógica de autenticación con el microservicio.
-      // Por ahora, simulamos el éxito redirigiendo al dashboard:
+   const handleLoginSubmit = async (e) => {
+   e.preventDefault();
+   try {
+      // 1. Llamamos al backend para obtener el token
+      const token = await loginUsuario(email, password);
+      
+      // 2. Guardamos el token en localStorage para usarlo después
+      localStorage.setItem('token', token);
+      
+      // 3. Decodificamos el token para extraer el rol y guardarlo
+      const decoded = jwtDecode(token);
+      localStorage.setItem('role', decoded.role); // 'role' es el nombre que le pusiste en el claim
+      
+      // 4. Redirigimos
       navigate('/dashboard');
-   };
+   } catch (error) {
+      alert("Credenciales incorrectas o error de conexión");
+   }
+};
 
    return (
       <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -23,14 +41,32 @@ const Login = () => {
 
                {view === 'login' ? (
                   <form onSubmit={handleLoginSubmit}>
+                     {/**EMAIL */}
                      <div className="mb-3">
                         <label className="form-label">Correo Institucional</label>
-                        <input type="email" className="form-control" placeholder="nombre@colegio.cl" required />
+                        <input
+                           type="email"
+                           className="form-control"
+                           placeholder="nombre@colegio.cl"
+                           value={email}
+                           onChange={(e) => setEmail(e.target.value)}
+                           required
+                        />
                      </div>
+
+                     {/* PASSWORD */}
                      <div className="mb-3">
                         <label className="form-label">Contraseña</label>
-                        <input type="password" className="form-control" placeholder="••••••••" required />
+                        <input
+                           type="password"
+                           className="form-control"
+                           placeholder="••••••••"
+                           value={password}
+                           onChange={(e) => setPassword(e.target.value)}
+                           required
+                        />
                      </div>
+                     
                      <div className="mb-3">
                         <label className="form-label">Rol de Usuario</label>
                         <select className="form-select">
