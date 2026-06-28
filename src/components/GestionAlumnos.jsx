@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { crearAlumnoConApoderado, obtenerTodosLosAlumnos, actualizarAlumno, eliminarAlumno } from '../services/estudiantes';
+import { crearAlumnoConApoderado, obtenerTodosLosAlumnos, actualizarAlumno, eliminarAlumno, obtenerTodosLosApoderados, obtenerAlumnoPorId } from '../services/estudiantes';
 
 const REGIONES_CHILE = [
   'Arica y Parinacota', 'Tarapacá', 'Antofagasta', 'Atacama', 'Coquimbo',
@@ -209,7 +209,7 @@ const GestionAlumnos = () => {
     setVista('formulario');
   };
 
-  const abrirFormularioEdicion = (alumno) => {
+  const abrirFormularioEdicion = async (alumno) => {
     const mapearPersona = (a, parentesco) => ({
       nombre: a.usu_nombre ?? '',
       segundoNombre: a.usu_snombre ?? '',
@@ -233,11 +233,23 @@ const GestionAlumnos = () => {
         : [{ ...initialDireccion }],
     });
 
+    let datosApoderado = { ...initialPersona, parentesco: 'MADRE' };
+    try {
+      // GET /alumno/{id} nos da el apoderadoId
+      const detalle = await obtenerAlumnoPorId(alumno.usuId);
+
+      if (detalle.apoderadoId) {
+        const apoderados = await obtenerTodosLosApoderados();
+        const apo = apoderados.find(a => a.usuId === detalle.apoderadoId);
+        if (apo) datosApoderado = mapearPersona(apo, apo.apode_parentesco);
+      }
+    } catch (e) {
+      console.warn('No se pudo cargar el apoderado', e);
+    }
+
     setFormData({
-      alumno: mapearPersona(alumno, alumno.estu_parentesco),
-      apoderado: alumno.apoderado
-        ? mapearPersona(alumno.apoderado, alumno.apoderado.apode_parentesco)
-        : { ...initialPersona, parentesco: 'MADRE' },
+      alumno: mapearPersona(alumno, alumno.estu_parentesco), // ← usa la entidad completa de la tabla
+      apoderado: datosApoderado,
     });
     setErrores({ alumno: {}, dirAlumno: {}, apoderado: {}, dirApoderado: {} });
     setModoEdicion(true);
@@ -317,7 +329,6 @@ const GestionAlumnos = () => {
                     <th>Nombre completo</th>
                     <th>Email</th>
                     <th>Parentesco</th>
-                    <th>Apoderado</th>
                     <th className="text-center">Acciones</th>
                   </tr>
                 </thead>
@@ -328,7 +339,6 @@ const GestionAlumnos = () => {
                       <td>{alumno.usu_nombre} {alumno.usu_snombre} {alumno.usu_appaterno} {alumno.usu_apmaterno}</td>
                       <td>{alumno.usuEmail}</td>
                       <td><span className="badge bg-secondary">{alumno.estu_parentesco}</span></td>
-                      <td>{alumno.apoderado ? `${alumno.apoderado.usu_nombre} ${alumno.apoderado.usu_appaterno}` : '—'}</td>
                       <td className="text-center text-nowrap">
                         <button className="btn btn-sm btn-outline-primary me-2" title="Editar" onClick={() => abrirFormularioEdicion(alumno)}>
                           <i className="bi bi-pencil"></i>

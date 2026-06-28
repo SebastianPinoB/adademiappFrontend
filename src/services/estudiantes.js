@@ -1,5 +1,7 @@
 import api from "./axiosConfig";
 
+
+// METODOS ALUMNO
 export const obtenerTodosLosAlumnos = async () => {
 
    try {
@@ -35,10 +37,31 @@ export const actualizarAlumno = async (id, estudianteActualizado) => {
 }
 
 export const eliminarAlumno = async (id) => {
-  try {
-    await api.delete(`/registro/alumno/${id}`);
-  } catch (error) {
-    console.error("Error al eliminar alumno");
-    throw error;
-  }
+   try {
+      await api.delete(`/registro/alumno/${id}`);
+   } catch (error) {
+      console.error("Error al eliminar alumno");
+      throw error;
+   }
+};
+
+export const obtenerAlumnoPorId = async (id) => {
+   try {
+      const respuesta = await api.get(`/registro/alumno/${id}`);
+      return respuesta.data;
+   } catch (error) {
+      console.error("Error al obtener el alumno");
+      throw error;
+   }
+};
+
+// METODOS APODERADO
+export const obtenerTodosLosApoderados = async () => {
+   try {
+      const respuesta = await api.get("/registro/apoderado");
+      return respuesta.data;
+   } catch (error) {
+      console.error("Error al obtener apoderados");
+      throw error;
+   }
 };
