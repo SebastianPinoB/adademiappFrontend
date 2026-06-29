@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Importamos los componentes independientes
 import CrudNotas from '../components/CrudNotas';
 import Asignaturas from '../components/Asignaturas';
 import Bitacora from '../components/Bitacora';
 import GestionAlumnos from '../components/GestionAlumnos';
 import ModulosVidaEstudiantil from '../components/ModulosVidaEstudiantil';
+import PortalAlumnoApoderado from '../components/PortalAlumnoApoderado';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('notas');
+
+  const role = localStorage.getItem('role');
+
+  if (role === 'ALUMNO' || role === 'APODERADO') {
+    return <PortalAlumnoApoderado />;
+  }
 
   return (
     <div className="container-fluid">
