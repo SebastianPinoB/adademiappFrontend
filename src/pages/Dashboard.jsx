@@ -14,17 +14,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('notas');
 
-
-const Dashboard = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('notas');
-
   const role = localStorage.getItem('role');
 
-  if (role === 'ALUMNO' || role === 'APODERADO') {
+  const roleUpper = role?.toUpperCase();
+  if (roleUpper === 'ALUMNO' || roleUpper === 'APODERADO') {
     return <PortalAlumnoApoderado />;
   }
-
 
   return (
     <div className="container-fluid">
@@ -49,9 +44,7 @@ const Dashboard = () => {
               </button>
             </li>
             <li className="nav-item mb-2">
-              <button
-                onClick={() => setActiveTab('alumnos')}
-                className={`nav-link text-start btn w-100 ${activeTab === 'alumnos' ? 'btn-primary text-white' : 'text-white-50'}`}>
+              <button onClick={() => setActiveTab('alumnos')} className={`nav-link text-start btn w-100 ${activeTab === 'alumnos' ? 'btn-primary text-white' : 'text-white-50'}`}>
                 <i className="bi bi-people me-2"></i>Gestionar Alumnos
               </button>
             </li>
@@ -82,6 +75,7 @@ const Dashboard = () => {
             </li>
           </ul>
         </div>
+
         {/* CONTENIDO DINÁMICO */}
         <div className="col-md-10 offset-md-2 p-4 bg-light min-vh-100">
           {activeTab === 'notas' && <CrudNotas />}
@@ -96,6 +90,6 @@ const Dashboard = () => {
       </div>
     </div>
   );
-  };
-}
+};
+
 export default Dashboard;
