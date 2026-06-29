@@ -12,17 +12,17 @@ function PortalAlumnoApoderado() {
   const [estudianteId, setEstudianteId] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     resolverIdentidad();
   }, []);
 
-  const navigate = useNavigate();
-    const cerrarSesion = () => {
+  const cerrarSesion = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     navigate('/');
-    };
+  };
 
   const resolverIdentidad = async () => {
     const token = localStorage.getItem('token');
@@ -30,47 +30,42 @@ function PortalAlumnoApoderado() {
     const email = token ? jwtDecode(token).sub : null;
 
     if (!email || !role) {
-    setError('No hay sesión activa.');
-    setCargando(false);
-    return;
+      setError('No hay sesión activa.');
+      setCargando(false);
+      return;
     }
 
-    const usuario = { email, role };
-    if (!usuario) { setError('No hay sesión activa.'); setCargando(false); return; }
-
     try {
-      if (usuario.role === 'ALUMNO') {
+      if (role === 'ALUMNO') {
         const res = await usuarioApi.get('/registro/alumno');
-        const propio = res.data.find(a => a.usuEmail === usuario.email);
+        const propio = res.data.find(a => a.usuEmail === email);
         if (!propio) throw new Error('No se encontró tu registro como alumno.');
         setMisDatos({ ...propio, rol: 'ALUMNO' });
         setEstudianteId(propio.usuId);
 
-      } else if (usuario.role === 'APODERADO') {
+      } else if (role === 'APODERADO') {
         const resApo = await usuarioApi.get('/registro/apoderado');
-        const propioApo = resApo.data.find(a => a.usuEmail === usuario.email);
+        const propioApo = resApo.data.find(a => a.usuEmail === email);
         if (!propioApo) throw new Error('No se encontró tu registro como apoderado.');
 
-        // Buscamos cuál estudiante tiene este apoderado vinculado
         const resAlumnos = await usuarioApi.get('/registro/alumno');
         let hijoEncontrado = null;
         for (const alumno of resAlumnos.data) {
           try {
             const detalle = await usuarioApi.get(`/registro/alumno/${alumno.usuId}`);
-            if (detalle.data.apoderadoId === propioApo.usuId) {
+            if (Number(detalle.data.apoderadoId) === Number(propioApo.usuId)) {
               hijoEncontrado = detalle.data;
               break;
             }
           } catch (errInterno) {
-            console.warn(`No se pudo consultar el alumno ID ${alumno.usuId}, se omite:`, errInterno.message);
-            // sigue con el siguiente alumno en vez de morir aquí
+            console.warn(`No se pudo consultar el alumno ID ${alumno.usuId}:`, errInterno.message);
           }
         }
 
         if (!hijoEncontrado) throw new Error('No se encontró un estudiante a tu cargo.');
+        setMisDatos({ ...propioApo, rol: 'APODERADO', hijoNombre: `${hijoEncontrado.nombre} ${hijoEncontrado.apellidoPaterno}` });
+        setEstudianteId(hijoEncontrado.id);
 
-        setMisDatos({ ...propioApo, rol: 'APODERADO', hijoNombre: hijoEncontrado.nombre });
-        setEstudianteId(hijoEncontrado.usuId);
       } else {
         setError('Este portal es solo para Alumnos y Apoderados.');
       }
@@ -82,34 +77,67 @@ function PortalAlumnoApoderado() {
   };
 
   if (cargando) return <p style={{ padding: '20px' }}>Cargando tu información...</p>;
-  if (error) return <div style={alertStyle('#f8d7da', '#721c24')}>{error}</div>;
+  if (error) return <div style={alertStyle}>{error}</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2>{/* tu título existente */}</h2>
-            <button onClick={cerrarSesion} style={{ padding: '8px 16px', backgroundColor: '#dc3545', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-                Cerrar Sesión
-            </button>
+    <div className="container-fluid">
+      <div className="row">
+
+        {/* SIDEBAR */}
+        <div className="col-md-2 bg-dark vh-100 p-3 text-white position-fixed">
+          <h4 className="mb-1 fw-bold text-primary">AcademiApp</h4>
+          <p className="text-white-50 small mb-4">
+            {misDatos.rol === 'ALUMNO'
+              ? misDatos.usu_nombre
+              : `${misDatos.usu_nombre} (Apoderado de ${misDatos.hijoNombre})`}
+          </p>
+
+          <ul className="nav flex-column">
+            <li className="nav-item mb-2">
+              <button
+                onClick={() => setTab('hojavida')}
+                className={`nav-link text-start btn w-100 ${tab === 'hojavida' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-clipboard-pulse me-2"></i>Hoja de Vida
+              </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button
+                onClick={() => setTab('mensajeria')}
+                className={`nav-link text-start btn w-100 ${tab === 'mensajeria' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-chat-dots me-2"></i>Mensajería
+              </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button
+                onClick={() => setTab('eventos')}
+                className={`nav-link text-start btn w-100 ${tab === 'eventos' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-calendar-event me-2"></i>Calendario y Muro
+              </button>
+            </li>
+
+            <li className="nav-item mt-5">
+              <button
+                onClick={cerrarSesion}
+                className="btn btn-link nav-link text-danger border-top pt-3 w-100 text-start"
+                style={{ textDecoration: 'none' }}>
+                <i className="bi bi-box-arrow-left me-2"></i>Cerrar Sesión
+              </button>
+            </li>
+          </ul>
         </div>
-      <h2>
-        {misDatos.rol === 'ALUMNO' ? `Hola, ${misDatos.usu_nombre}` : `Portal de ${misDatos.usu_nombre} (Apoderado de ${misDatos.hijoNombre})`}
-      </h2>
 
-      <div style={{ display: 'flex', gap: '10px', margin: '20px 0' }}>
-        <button onClick={() => setTab('hojavida')} style={tabStyle(tab === 'hojavida')}>Hoja de Vida</button>
-        <button onClick={() => setTab('mensajeria')} style={tabStyle(tab === 'mensajeria')}>Mensajería</button>
-        <button onClick={() => setTab('eventos')} style={tabStyle(tab === 'eventos')}>Calendario y Muro</button>
+        {/* CONTENIDO */}
+        <div className="col-md-10 offset-md-2 p-4 bg-light min-vh-100">
+          {tab === 'hojavida' && <MiHojaDeVida estudianteId={estudianteId} />}
+          {tab === 'mensajeria' && <MiMensajeria miUsuId={misDatos.usuId} />}
+          {tab === 'eventos' && <MiCalendarioMuro />}
+        </div>
+
       </div>
-
-      {tab === 'hojavida' && <MiHojaDeVida estudianteId={estudianteId} />}
-      {tab === 'mensajeria' && <MiMensajeria miUsuId={misDatos.usuId} />}
-      {tab === 'eventos' && <MiCalendarioMuro />}
     </div>
   );
 }
 
-const alertStyle = (bg, color) => ({ backgroundColor: bg, color, padding: '15px', borderRadius: '6px', margin: '20px' });
-const tabStyle = (active) => ({ padding: '10px 18px', border: 'none', borderRadius: '6px', backgroundColor: active ? '#2563eb' : '#e5e7eb', color: active ? '#fff' : '#333', cursor: 'pointer', fontSize: '14px' });
+const alertStyle = { backgroundColor: '#f8d7da', color: '#721c24', padding: '15px', borderRadius: '6px', margin: '20px' };
 
 export default PortalAlumnoApoderado;

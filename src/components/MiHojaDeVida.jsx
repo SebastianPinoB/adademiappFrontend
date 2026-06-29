@@ -17,7 +17,7 @@ function MiHojaDeVida({ estudianteId }) {
   return (
     <div>
       <div style={cardStyle}>
-        <h5 style={titleStyle}>🩺 Antecedente Médico</h5>
+        <h5 style={titleStyle}>Antecedente Médico</h5>
         {hoja.antecedenteMedico ? (
           <ul style={listStyle}>
             <li><b>Edad:</b> {hoja.antecedenteMedico.antMedEdad}</li>
@@ -31,7 +31,7 @@ function MiHojaDeVida({ estudianteId }) {
       </div>
 
       <div style={cardStyle}>
-        <h5 style={titleStyle}>📚 Antecedentes Académicos</h5>
+        <h5 style={titleStyle}>Antecedentes Académicos</h5>
         {hoja.antecedentesAcademicos?.length > 0 ? (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={thStyle}>Año</th><th style={thStyle}>Promedio</th><th style={thStyle}>Observación</th></tr></thead>

@@ -9,10 +9,12 @@ import ReportesPage from '../components/Reportes';
 import MatriculaPage from '../components/Matricula';
 import AnotacionesPage from '../components/Anotacion';
 import PortalAlumnoApoderado from '../components/PortalAlumnoApoderado';
+import MensajeriaPage from '../components/MensajeriaPage';
+import EventosCalendariosPage from '../components/EventosCalendariosPage';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('notas');
+  const [activeTab, setActiveTab] = useState('bienvenida');
 
   const role = localStorage.getItem('role');
 
@@ -35,7 +37,7 @@ const Dashboard = () => {
             </li>
             <li className="nav-item mb-2">
               <button onClick={() => setActiveTab('notas')} className={`nav-link text-start btn w-100 ${activeTab === 'notas' ? 'btn-primary text-white' : 'text-white-50'}`}>
-                <i className="bi bi-person-badge me-2"></i>Notas (CRUD)
+                <i className="bi bi-person-badge me-2"></i>Registro de Notas
               </button>
             </li>
             <li className="nav-item mb-2">
@@ -51,6 +53,16 @@ const Dashboard = () => {
             <li className="nav-item mb-2">
               <button onClick={() => setActiveTab('vidaestudiantil')} className={`nav-link text-start btn w-100 ${activeTab === 'vidaestudiantil' ? 'btn-primary text-white' : 'text-white-50'}`}>
                 <i className="bi bi-clipboard-pulse me-2"></i>Vida Estudiantil
+              </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button onClick={() => setActiveTab('mensajeria')} className={`nav-link text-start btn w-100 ${activeTab === 'mensajeria' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-chat-dots me-2"></i>Mensajería
+              </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button onClick={() => setActiveTab('eventos')} className={`nav-link text-start btn w-100 ${activeTab === 'eventos' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-calendar-event me-2"></i>Calendario y Muro
               </button>
             </li>
             <li className="nav-item mb-2">
@@ -78,11 +90,21 @@ const Dashboard = () => {
 
         {/* CONTENIDO DINÁMICO */}
         <div className="col-md-10 offset-md-2 p-4 bg-light min-vh-100">
+          {activeTab === 'bienvenida' && (
+            <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+              <h1 className="fw-bold text-primary mb-2">Bienvenido a AcademiApp</h1>
+              <p className="text-muted mb-1" style={{ fontSize: '22px' }}>Colegio Bernardo O'Higgins</p>
+              <p className="text-muted mb-4">Año Académico 2026</p>
+              <p className="text-secondary" style={{ fontSize: '18px' }}>Selecciona el módulo que necesites desde el menú lateral para comenzar.</p>
+            </div>
+          )}
           {activeTab === 'notas' && <CrudNotas />}
           {activeTab === 'alumnos' && <GestionAlumnos />}
           {activeTab === 'asignaturas' && <Asignaturas />}
           {activeTab === 'bitacora' && <Bitacora />}
           {activeTab === 'vidaestudiantil' && <ModulosVidaEstudiantil />}
+          {activeTab === 'mensajeria' && <MensajeriaPage />}
+          {activeTab === 'eventos' && <EventosCalendariosPage />}
           {activeTab === 'reportes' && <ReportesPage />}
           {activeTab === 'matricula' && <MatriculaPage />}
           {activeTab === 'anotaciones' && <AnotacionesPage />}
