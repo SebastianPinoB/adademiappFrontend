@@ -5,6 +5,7 @@ import CrudNotas from '../components/CrudNotas';
 import Asignaturas from '../components/Asignaturas';
 import Bitacora from '../components/Bitacora';
 import GestionAlumnos from '../components/GestionAlumnos';
+import ModulosVidaEstudiantil from '../components/ModulosVidaEstudiantil';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -40,6 +41,11 @@ const Dashboard = () => {
                 <i className="bi bi-people me-2"></i>Gestionar Alumnos
               </button>
             </li>
+            <li className="nav-item mb-2">
+              <button onClick={() => setActiveTab('vidaestudiantil')} className={`nav-link text-start btn w-100 ${activeTab === 'vidaestudiantil' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-clipboard-pulse me-2"></i>Vida Estudiantil
+              </button>
+            </li>
             <li className="nav-item mt-5">
               <button onClick={() => navigate('/')} className="btn btn-link nav-link text-danger border-top pt-3 w-100 text-start" style={{ textDecoration: 'none' }}>
                 <i className="bi bi-box-arrow-left me-2"></i>Cerrar Sesión
@@ -54,6 +60,7 @@ const Dashboard = () => {
           {activeTab === 'alumnos' && <GestionAlumnos />}
           {activeTab === 'asignaturas' && <Asignaturas />}
           {activeTab === 'bitacora' && <Bitacora />}
+          {activeTab === 'vidaestudiantil' && <ModulosVidaEstudiantil />}
         </div>
 
       </div>
