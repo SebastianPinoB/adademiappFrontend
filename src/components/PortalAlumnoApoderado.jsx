@@ -5,9 +5,10 @@ import MiMensajeria from './MiMensajeria';
 import MiCalendarioMuro from './MiCalendarioMuro';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import MisNotas from './MisNotas';
 
 function PortalAlumnoApoderado() {
-  const [tab, setTab] = useState('hojavida');
+  const [tab, setTab] = useState('notas');
   const [misDatos, setMisDatos] = useState(null);
   const [estudianteId, setEstudianteId] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -95,6 +96,13 @@ function PortalAlumnoApoderado() {
           <ul className="nav flex-column">
             <li className="nav-item mb-2">
               <button
+                onClick={() => setTab('notas')}
+                className={`nav-link text-start btn w-100 ${tab === 'notas' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-file-earmark-text me-2"></i>Mis Notas
+              </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button
                 onClick={() => setTab('hojavida')}
                 className={`nav-link text-start btn w-100 ${tab === 'hojavida' ? 'btn-primary text-white' : 'text-white-50'}`}>
                 <i className="bi bi-clipboard-pulse me-2"></i>Hoja de Vida
@@ -128,6 +136,7 @@ function PortalAlumnoApoderado() {
 
         {/* CONTENIDO */}
         <div className="col-md-10 offset-md-2 p-4 bg-light min-vh-100">
+          {tab === 'notas' && <MisNotas estudianteId={estudianteId} />}
           {tab === 'hojavida' && <MiHojaDeVida estudianteId={estudianteId} />}
           {tab === 'mensajeria' && <MiMensajeria miUsuId={misDatos.usuId} />}
           {tab === 'eventos' && <MiCalendarioMuro />}

@@ -31,7 +31,7 @@ function MiMensajeria({ miUsuId }) {
       {error && <div style={alertStyle('#f8d7da', '#721c24')}>{typeof error === 'string' ? error : 'Error'}</div>}
 
       <div style={cardStyle}>
-        <h5 style={titleStyle}>✉️ Enviar Mensaje</h5>
+        <h5 style={titleStyle}> Enviar Mensaje</h5>
         <form onSubmit={enviar}>
           <input type="number" placeholder="ID del destinatario" value={receptorId}
             onChange={e => setReceptorId(e.target.value)} style={inputStyle} required />
@@ -42,7 +42,7 @@ function MiMensajeria({ miUsuId }) {
       </div>
 
       <div style={cardStyle}>
-        <h5 style={titleStyle}>📥 Mis Mensajes</h5>
+        <h5 style={titleStyle}>Mis Mensajes</h5>
         {bandeja.length === 0 ? <p>No tienes mensajes.</p> : (
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {bandeja.map(m => (

@@ -31,8 +31,18 @@ const Dashboard = () => {
           <h4 className="mb-4 fw-bold text-primary">AcademiApp</h4>
           <ul className="nav flex-column">
             <li className="nav-item mb-2">
+              <button onClick={() => setActiveTab('alumnos')} className={`nav-link text-start btn w-100 ${activeTab === 'alumnos' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-people me-2"></i>Gestionar Alumnos
+              </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button onClick={() => setActiveTab('vidaestudiantil')} className={`nav-link text-start btn w-100 ${activeTab === 'vidaestudiantil' ? 'btn-primary text-white' : 'text-white-50'}`}>
+                <i className="bi bi-clipboard-pulse me-2"></i>Vida Estudiantil
+              </button>
+            </li>
+            <li className="nav-item mb-2">
               <button onClick={() => setActiveTab('asignaturas')} className={`nav-link text-start btn w-100 ${activeTab === 'asignaturas' ? 'btn-primary text-white' : 'text-white-50'}`}>
-                <i className="bi bi-book me-2"></i>Asignaturas
+                <i className="bi bi-book me-2"></i>Gestión académica
               </button>
             </li>
             <li className="nav-item mb-2">
@@ -42,17 +52,7 @@ const Dashboard = () => {
             </li>
             <li className="nav-item mb-2">
               <button onClick={() => setActiveTab('bitacora')} className={`nav-link text-start btn w-100 ${activeTab === 'bitacora' ? 'btn-primary text-white' : 'text-white-50'}`}>
-                <i className="bi bi-journal-text me-2"></i>Bitácora
-              </button>
-            </li>
-            <li className="nav-item mb-2">
-              <button onClick={() => setActiveTab('alumnos')} className={`nav-link text-start btn w-100 ${activeTab === 'alumnos' ? 'btn-primary text-white' : 'text-white-50'}`}>
-                <i className="bi bi-people me-2"></i>Gestionar Alumnos
-              </button>
-            </li>
-            <li className="nav-item mb-2">
-              <button onClick={() => setActiveTab('vidaestudiantil')} className={`nav-link text-start btn w-100 ${activeTab === 'vidaestudiantil' ? 'btn-primary text-white' : 'text-white-50'}`}>
-                <i className="bi bi-clipboard-pulse me-2"></i>Vida Estudiantil
+                <i className="bi bi-journal-text me-2"></i>Bitácora de asignatura
               </button>
             </li>
             <li className="nav-item mb-2">

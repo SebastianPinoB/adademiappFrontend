@@ -8,12 +8,10 @@ import {
 import { gestionAcademicaApi } from '../services/axiosConfigB';
 import { guardarRelacionEva } from './evaRelaciones'; // helper de localStorage
 
-// Asignatura usa su propio endpoint directo
 const crearAsignatura = async (data) => (await gestionAcademicaApi.post('/asignaturas', data)).data;
 const actualizarAsignatura = async (id, data) => (await gestionAcademicaApi.put(`/asignaturas/${id}`, data)).data;
 const eliminarAsignatura = async (id) => await gestionAcademicaApi.delete(`/asignaturas/${id}`);
 
-// ── Modal de confirmación ──
 const ModalEliminar = ({ nombre, onConfirmar, onCancelar }) => (
   <div className="modal show d-block" style={{ background: 'rgba(0,0,0,0.5)' }}>
     <div className="modal-dialog modal-dialog-centered">
@@ -35,7 +33,6 @@ const ModalEliminar = ({ nombre, onConfirmar, onCancelar }) => (
   </div>
 );
 
-// ── Tabla genérica con acciones ──
 const TablaGenerica = ({ columnas, filas, onEditar, onEliminar, cargando, vacio }) =>
   cargando ? (
     <div className="text-center py-4"><div className="spinner-border text-primary" role="status" /></div>
@@ -69,9 +66,8 @@ const TablaGenerica = ({ columnas, filas, onEditar, onEliminar, cargando, vacio 
     </div>
   );
 
-// ════════════════════════════════════════
+
 //  COMPONENTE PRINCIPAL
-// ════════════════════════════════════════
 const Asignaturas = () => {
   const [tab, setTab] = useState('asignaturas');
   const [asignaturas, setAsignaturas] = useState([]);
