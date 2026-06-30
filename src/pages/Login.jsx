@@ -67,16 +67,7 @@ const Login = () => {
                         />
                      </div>
                      
-                     <div className="mb-3">
-                        <label className="form-label">Rol de Usuario</label>
-                        <select className="form-select">
-                           <option>Alumno</option>
-                           <option>Apoderado</option>
-                           <option>Profesor</option>
-                           <option>Inspector</option>
-                           <option>Administrativo</option>
-                        </select>
-                     </div>
+                     
                      <button type="submit" className="btn btn-primary w-100 mb-3">Ingresar</button>
                      <div className="text-center">
                         <a href="#" className="text-decoration-none small" onClick={() => setView('recovery')}>
